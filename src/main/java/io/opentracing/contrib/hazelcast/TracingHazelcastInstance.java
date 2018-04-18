@@ -80,14 +80,12 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public <E> ISet<E> getSet(String s) {
-    // TODO
-    return instance.getSet(s);
+    return new TracingSet<>(instance.getSet(s), traceWithActiveSpanOnly);
   }
 
   @Override
   public <E> IList<E> getList(String s) {
-    //TODO
-    return instance.getList(s);
+    return new TracingList<>(instance.getList(s), traceWithActiveSpanOnly);
   }
 
   @Override
