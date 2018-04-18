@@ -15,8 +15,10 @@ package io.opentracing.contrib.hazelcast;
 
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorate;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateAction;
+import static io.opentracing.contrib.hazelcast.TracingHelper.decorateActionExceptionally;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateExceptionally;
 import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
 
 import com.hazelcast.core.IQueue;
 import com.hazelcast.core.ItemListener;
@@ -84,7 +86,7 @@ public class TracingQueue<E> implements IQueue<E> {
   public void put(E element) throws InterruptedException {
     Span span = helper.buildSpan("put", queue);
     span.setTag("element", nullable(element));
-    decorateExceptionally(() -> queue.put(element), span);
+    decorateActionExceptionally(() -> queue.put(element), span);
   }
 
   @Override
@@ -165,8 +167,8 @@ public class TracingQueue<E> implements IQueue<E> {
 
   @Override
   public Iterator<E> iterator() {
-    // TODO
-    return queue.iterator();
+    Span span = helper.buildSpan("iterator", queue);
+    return decorate(queue::iterator, span);
   }
 
   @Override
@@ -206,7 +208,7 @@ public class TracingQueue<E> implements IQueue<E> {
   public boolean removeIf(Predicate<? super E> filter) {
     Span span = helper.buildSpan("removeIf", queue);
     span.setTag("filter", nullable(filter));
-    return decorate(()->queue.removeIf(filter), span);
+    return decorate(() -> queue.removeIf(filter), span);
   }
 
   @Override
@@ -249,7 +251,9 @@ public class TracingQueue<E> implements IQueue<E> {
 
   @Override
   public void forEach(Consumer<? super E> action) {
-    queue.forEach(action);
+    Span span = helper.buildSpan("forEach", queue);
+    span.setTag("action", nullableClass(action));
+    decorateAction(() -> queue.forEach(action), span);
   }
 
   @Override
@@ -269,17 +273,23 @@ public class TracingQueue<E> implements IQueue<E> {
 
   @Override
   public void destroy() {
-    queue.destroy();
+    Span span = helper.buildSpan("destroy", queue);
+    decorateAction(queue::destroy, span);
   }
 
   @Override
   public String addItemListener(ItemListener<E> listener, boolean includeValue) {
-    return queue.addItemListener(listener, includeValue);
+    Span span = helper.buildSpan("addItemListener", queue);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> queue.addItemListener(listener, includeValue), span);
   }
 
   @Override
   public boolean removeItemListener(String registrationId) {
-    return queue.removeItemListener(registrationId);
+    Span span = helper.buildSpan("removeItemListener", queue);
+    span.setTag("registrationId", registrationId);
+    return decorate(() -> queue.removeItemListener(registrationId), span);
   }
 
 

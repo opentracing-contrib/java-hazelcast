@@ -62,29 +62,43 @@ public class TracingReplicatedMap<K, V> implements ReplicatedMap<K, V> {
 
   @Override
   public boolean removeEntryListener(String id) {
-    return map.removeEntryListener(id);
+    Span span = helper.buildSpan("removeEntryListener", map);
+    span.setTag("id", nullable(id));
+    return decorate(() -> map.removeEntryListener(id), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener) {
-    return map.addEntryListener(listener);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> map.addEntryListener(listener), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener, K key) {
-    return map.addEntryListener(listener, key);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("key", nullable(key));
+    return decorate(() -> map.addEntryListener(listener, key), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener,
       Predicate<K, V> predicate) {
-    return map.addEntryListener(listener, predicate);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    return decorate(() -> map.addEntryListener(listener, predicate), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener,
       Predicate<K, V> predicate, K key) {
-    return map.addEntryListener(listener, predicate, key);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("key", nullable(key));
+    return decorate(() -> map.addEntryListener(listener, predicate, key), span);
   }
 
   @Override
@@ -114,7 +128,8 @@ public class TracingReplicatedMap<K, V> implements ReplicatedMap<K, V> {
 
   @Override
   public LocalReplicatedMapStats getReplicatedMapStats() {
-    return map.getReplicatedMapStats();
+    Span span = helper.buildSpan("getReplicatedMapStats", map);
+    return decorate(map::getReplicatedMapStats, span);
   }
 
   @Override

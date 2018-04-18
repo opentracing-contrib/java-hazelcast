@@ -196,7 +196,7 @@ class TracingHelper {
     }
   }
 
-  static void decorateExceptionally(ThrowingAction action, Span span)
+  static void decorateActionExceptionally(ThrowingAction action, Span span)
       throws InterruptedException {
     try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
       action.execute();

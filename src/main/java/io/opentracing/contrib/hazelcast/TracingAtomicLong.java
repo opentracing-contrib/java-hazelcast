@@ -284,7 +284,8 @@ public class TracingAtomicLong implements IAtomicLong {
 
   @Override
   public void destroy() {
-    atomicLong.destroy();
+    Span span = helper.buildSpan("destroy", atomicLong);
+    decorateAction(atomicLong::destroy, span);
   }
 
 }

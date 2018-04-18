@@ -13,9 +13,11 @@
  */
 package io.opentracing.contrib.hazelcast;
 
+import static io.opentracing.contrib.hazelcast.TracingHelper.decorate;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateAction;
 import static io.opentracing.contrib.hazelcast.TracingHelper.inject;
 import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ITopic;
@@ -57,18 +59,23 @@ public class TracingTopic<E> implements ITopic<E> {
 
   @Override
   public String addMessageListener(MessageListener<E> listener) {
-    return topic.addMessageListener(
-        new TracingMessageListener<>(listener, topic.getName(), traceWithActiveSpanOnly));
+    Span span = helper.buildSpan("addMessageListener", topic);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> topic.addMessageListener(
+        new TracingMessageListener<>(listener, topic.getName(), traceWithActiveSpanOnly)), span);
   }
 
   @Override
   public boolean removeMessageListener(String registrationId) {
-    return topic.removeMessageListener(registrationId);
+    Span span = helper.buildSpan("removeMessageListener", topic);
+    span.setTag("registrationId", nullable(registrationId));
+    return decorate(() -> topic.removeMessageListener(registrationId), span);
   }
 
   @Override
   public LocalTopicStats getLocalTopicStats() {
-    return topic.getLocalTopicStats();
+    Span span = helper.buildSpan("getLocalTopicStats", topic);
+    return decorate(topic::getLocalTopicStats, span);
   }
 
   @Override

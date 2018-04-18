@@ -16,6 +16,7 @@ package io.opentracing.contrib.hazelcast;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateAction;
 import static io.opentracing.contrib.hazelcast.TracingHelper.extract;
 import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
 
 import com.hazelcast.core.Message;
 import com.hazelcast.core.MessageListener;
@@ -42,6 +43,7 @@ public class TracingMessageListener<E> implements MessageListener<TracingMessage
     span.setTag("message", nullable(message.getMessageObject().getMessage()));
     span.setTag("publishTime", message.getPublishTime());
     span.setTag("topic", topic);
+    span.setTag("listener", nullableClass(listener));
     span.setTag("publishingMember", nullable(message.getPublishingMember().getAddress()));
 
     decorateAction(

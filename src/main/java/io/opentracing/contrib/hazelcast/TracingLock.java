@@ -15,7 +15,9 @@ package io.opentracing.contrib.hazelcast;
 
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorate;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateAction;
+import static io.opentracing.contrib.hazelcast.TracingHelper.decorateActionExceptionally;
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorateExceptionally;
+import static io.opentracing.contrib.hazelcast.TracingHelper.inject;
 import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
 
 import com.hazelcast.core.ICondition;
@@ -28,16 +30,19 @@ public class TracingLock implements ILock {
 
   private final ILock lock;
   private final TracingHelper helper;
+  private final boolean traceWithActiveSpanOnly;
 
   public TracingLock(ILock lock, boolean traceWithActiveSpanOnly) {
     this.lock = lock;
+    this.traceWithActiveSpanOnly = traceWithActiveSpanOnly;
     helper = new TracingHelper(traceWithActiveSpanOnly);
   }
 
   @Override
   @Deprecated
   public Object getKey() {
-    return lock.getKey();
+    Span span = helper.buildSpan("getKey", lock);
+    return decorate(lock::getKey, span);
   }
 
   @Override
@@ -99,8 +104,11 @@ public class TracingLock implements ILock {
 
   @Override
   public ICondition newCondition(String name) {
-    //TODO
-    return lock.newCondition(name);
+    Span span = helper.buildSpan("newCondition", lock);
+    span.setTag("conditionName", name);
+    return decorate(
+        () -> new TracingCondition(lock.newCondition(name), name, traceWithActiveSpanOnly,
+            inject(span)), span);
   }
 
   @Override
@@ -130,7 +138,7 @@ public class TracingLock implements ILock {
   @Override
   public void lockInterruptibly() throws InterruptedException {
     Span span = helper.buildSpan("lockInterruptibly", lock);
-    decorateExceptionally(lock::lockInterruptibly, span);
+    decorateActionExceptionally(lock::lockInterruptibly, span);
   }
 
   @Override
@@ -153,6 +161,5 @@ public class TracingLock implements ILock {
     Span span = helper.buildSpan("destroy", lock);
     decorateAction(lock::destroy, span);
   }
-
 
 }

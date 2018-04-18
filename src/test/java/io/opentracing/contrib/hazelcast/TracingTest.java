@@ -215,10 +215,10 @@ public class TracingTest {
     ITopic<String> topic = hazelcast.getTopic("topic");
     topic.addMessageListener(new TestMessageListener());
     topic.publish("Hello to distributed world");
-    await().atMost(15, TimeUnit.SECONDS).until(reportedSpansSize(), equalTo(2));
+    await().atMost(15, TimeUnit.SECONDS).until(reportedSpansSize(), equalTo(3));
 
     List<MockSpan> spans = tracer.finishedSpans();
-    assertEquals(2, spans.size());
+    assertEquals(3, spans.size());
     checkSpans(spans);
     assertNull(tracer.activeSpan());
   }

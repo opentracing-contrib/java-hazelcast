@@ -430,27 +430,34 @@ public class TracingExecutorService implements IExecutorService {
 
   @Override
   public void shutdown() {
-    service.shutdown();
+    Span span = helper.buildSpan("shutdown", service);
+    decorateAction(service::shutdown, span);
   }
 
   @Override
   public List<Runnable> shutdownNow() {
-    return service.shutdownNow();
+    Span span = helper.buildSpan("shutdownNow", service);
+    return decorate(service::shutdownNow, span);
   }
 
   @Override
   public boolean isShutdown() {
-    return service.isShutdown();
+    Span span = helper.buildSpan("isShutdown", service);
+    return decorate(service::isShutdown, span);
   }
 
   @Override
   public boolean isTerminated() {
-    return service.isTerminated();
+    Span span = helper.buildSpan("isTerminated", service);
+    return decorate(service::isTerminated, span);
   }
 
   @Override
   public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-    return service.awaitTermination(timeout, unit);
+    Span span = helper.buildSpan("awaitTermination", service);
+    span.setTag("timeout", timeout);
+    span.setTag("timeUnit", nullable(unit));
+    return decorateExceptionally(() -> service.awaitTermination(timeout, unit), span);
   }
 
   @Override
@@ -568,8 +575,8 @@ public class TracingExecutorService implements IExecutorService {
 
   @Override
   public void destroy() {
-    service.destroy();
+    Span span = helper.buildSpan("destroy", service);
+    decorateAction(service::destroy, span);
   }
-
 
 }

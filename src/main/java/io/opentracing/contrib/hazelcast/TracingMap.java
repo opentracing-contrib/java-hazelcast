@@ -379,115 +379,179 @@ public class TracingMap<K, V> implements IMap<K, V> {
 
   @Override
   public String addLocalEntryListener(MapListener listener) {
-    return map.addLocalEntryListener(listener);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> map.addLocalEntryListener(listener), span);
   }
 
   @Deprecated
   @Override
   public String addLocalEntryListener(EntryListener listener) {
-    return map.addLocalEntryListener(listener);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> map.addLocalEntryListener(listener), span);
   }
 
   @Override
   public String addLocalEntryListener(MapListener listener,
       Predicate<K, V> predicate, boolean includeValue) {
-    return map.addLocalEntryListener(listener, predicate, includeValue);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addLocalEntryListener(listener, predicate, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addLocalEntryListener(EntryListener listener,
       Predicate<K, V> predicate, boolean includeValue) {
-    return map.addLocalEntryListener(listener, predicate, includeValue);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addLocalEntryListener(listener, predicate, includeValue), span);
   }
 
   @Override
   public String addLocalEntryListener(MapListener listener,
       Predicate<K, V> predicate, K key, boolean includeValue) {
-    return map.addLocalEntryListener(listener, predicate, key, includeValue);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addLocalEntryListener(listener, predicate, key, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addLocalEntryListener(EntryListener listener,
       Predicate<K, V> predicate, K key, boolean includeValue) {
-    return map.addLocalEntryListener(listener, predicate, key, includeValue);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addLocalEntryListener(listener, predicate, key, includeValue), span);
   }
 
   @Override
   public String addInterceptor(MapInterceptor interceptor) {
-    return map.addInterceptor(interceptor);
+    Span span = helper.buildSpan("addInterceptor", map);
+    span.setTag("interceptor", nullableClass(interceptor));
+    return decorate(() -> map.addInterceptor(interceptor), span);
   }
 
   @Override
   public void removeInterceptor(String id) {
-    map.removeInterceptor(id);
+    Span span = helper.buildSpan("removeInterceptor", map);
+    span.setTag("id", nullable(id));
+    decorateAction(() -> map.removeInterceptor(id), span);
   }
 
   @Override
   public String addEntryListener(MapListener listener,
       boolean includeValue) {
-    return map.addEntryListener(listener, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addEntryListener(EntryListener listener, boolean includeValue) {
-    return map.addEntryListener(listener, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, includeValue), span);
   }
 
   @Override
   public boolean removeEntryListener(String id) {
-    return map.removeEntryListener(id);
+    Span span = helper.buildSpan("removeEntryListener", map);
+    span.setTag("id", nullable(id));
+    return decorate(() -> map.removeEntryListener(id), span);
   }
 
   @Override
   public String addPartitionLostListener(MapPartitionLostListener listener) {
-    return map.addPartitionLostListener(listener);
+    Span span = helper.buildSpan("addPartitionLostListener", map);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> map.addPartitionLostListener(listener), span);
   }
 
   @Override
   public boolean removePartitionLostListener(String id) {
-    return map.removePartitionLostListener(id);
+    Span span = helper.buildSpan("removePartitionLostListener", map);
+    span.setTag("id", nullable(id));
+    return decorate(() -> map.removePartitionLostListener(id), span);
   }
 
   @Override
   public String addEntryListener(MapListener listener, K key,
       boolean includeValue) {
-    return map.addEntryListener(listener, key, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, key, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addEntryListener(EntryListener listener, K key,
       boolean includeValue) {
-    return map.addEntryListener(listener, key, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, key, includeValue), span);
   }
 
   @Override
   public String addEntryListener(MapListener listener,
       Predicate<K, V> predicate, boolean includeValue) {
-    return map.addEntryListener(listener, predicate, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, predicate, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addEntryListener(EntryListener listener,
       Predicate<K, V> predicate, boolean includeValue) {
-    return map.addEntryListener(listener, predicate, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, predicate, includeValue), span);
   }
 
   @Override
   public String addEntryListener(MapListener listener,
       Predicate<K, V> predicate, K key, boolean includeValue) {
-    return map.addEntryListener(listener, predicate, key, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, predicate, key, includeValue), span);
   }
 
   @Deprecated
   @Override
   public String addEntryListener(EntryListener listener,
       Predicate<K, V> predicate, K key, boolean includeValue) {
-    return map.addEntryListener(listener, predicate, key, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("predicate", nullable(predicate));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, predicate, key, includeValue), span);
   }
 
   @Override
@@ -572,7 +636,8 @@ public class TracingMap<K, V> implements IMap<K, V> {
 
   @Override
   public LocalMapStats getLocalMapStats() {
-    return map.getLocalMapStats();
+    Span span = helper.buildSpan("getLocalMapStats", map);
+    return decorate(map::getLocalMapStats, span);
   }
 
   @Override

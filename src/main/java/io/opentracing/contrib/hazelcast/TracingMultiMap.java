@@ -143,24 +143,35 @@ public class TracingMultiMap<K, V> implements MultiMap<K, V> {
 
   @Override
   public String addLocalEntryListener(EntryListener<K, V> listener) {
-    return map.addLocalEntryListener(listener);
+    Span span = helper.buildSpan("addLocalEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    return decorate(() -> map.addLocalEntryListener(listener), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener,
       boolean includeValue) {
-    return map.addEntryListener(listener, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, includeValue), span);
   }
 
   @Override
   public boolean removeEntryListener(String registrationId) {
-    return map.removeEntryListener(registrationId);
+    Span span = helper.buildSpan("removeEntryListener", map);
+    span.setTag("registrationId", nullable(registrationId));
+    return decorate(() -> map.removeEntryListener(registrationId), span);
   }
 
   @Override
   public String addEntryListener(EntryListener<K, V> listener, K key,
       boolean includeValue) {
-    return map.addEntryListener(listener, key, includeValue);
+    Span span = helper.buildSpan("addEntryListener", map);
+    span.setTag("listener", nullableClass(listener));
+    span.setTag("key", nullable(key));
+    span.setTag("includeValue", includeValue);
+    return decorate(() -> map.addEntryListener(listener, key, includeValue), span);
   }
 
   @Override
@@ -231,7 +242,8 @@ public class TracingMultiMap<K, V> implements MultiMap<K, V> {
 
   @Override
   public LocalMultiMapStats getLocalMultiMapStats() {
-    return map.getLocalMultiMapStats();
+    Span span = helper.buildSpan("getLocalMultiMapStats", map);
+    return decorate(map::getLocalMultiMapStats, span);
   }
 
   @Override
@@ -270,7 +282,8 @@ public class TracingMultiMap<K, V> implements MultiMap<K, V> {
 
   @Override
   public void destroy() {
-    map.destroy();
+    Span span = helper.buildSpan("destroy", map);
+    decorateAction(map::destroy, span);
   }
 
 }

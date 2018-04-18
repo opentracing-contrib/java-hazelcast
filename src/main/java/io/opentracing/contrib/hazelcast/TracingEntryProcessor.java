@@ -15,6 +15,8 @@ package io.opentracing.contrib.hazelcast;
 
 import static io.opentracing.contrib.hazelcast.TracingHelper.decorate;
 import static io.opentracing.contrib.hazelcast.TracingHelper.extract;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
 
 import com.hazelcast.map.EntryBackupProcessor;
 import com.hazelcast.map.EntryProcessor;
@@ -39,11 +41,18 @@ public class TracingEntryProcessor<K, V> implements EntryProcessor<K, V> {
   public Object process(Entry<K, V> entry) {
     SpanContext parent = extract(spanContextMap);
     Span span = TracingHelper.buildSpan("process", parent, traceWithActiveSpanOnly);
+    span.setTag("processor", nullableClass(processor));
+    span.setTag("entry", nullable(entry));
     return decorate(() -> processor.process(entry), span);
   }
 
   @Override
   public EntryBackupProcessor<K, V> getBackupProcessor() {
-    return processor.getBackupProcessor();
+    EntryBackupProcessor<K, V> entryBackupProcessor = processor.getBackupProcessor();
+    if (entryBackupProcessor != null) {
+      return new TracingEntryBackupProcessor<>(entryBackupProcessor, traceWithActiveSpanOnly,
+          spanContextMap);
+    }
+    return null;
   }
 }
