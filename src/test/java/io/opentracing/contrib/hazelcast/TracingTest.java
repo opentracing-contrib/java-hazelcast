@@ -101,7 +101,7 @@ public class TracingTest {
     map.executeOnKey("key", new TestEntryProcessor());
     System.out.println("new value:" + map.get("key"));
     List<MockSpan> spans = tracer.finishedSpans();
-    assertEquals(4, spans.size());
+    assertEquals(5, spans.size());
     checkSpans(spans);
     assertNull(tracer.activeSpan());
   }
