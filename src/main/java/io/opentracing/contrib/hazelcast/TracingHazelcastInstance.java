@@ -13,6 +13,10 @@
  */
 package io.opentracing.contrib.hazelcast;
 
+import static io.opentracing.contrib.hazelcast.TracingHelper.decorate;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullable;
+import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
+
 import com.hazelcast.cardinality.CardinalityEstimator;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.ClientService;
@@ -49,6 +53,7 @@ import com.hazelcast.transaction.TransactionContext;
 import com.hazelcast.transaction.TransactionException;
 import com.hazelcast.transaction.TransactionOptions;
 import com.hazelcast.transaction.TransactionalTask;
+import io.opentracing.Span;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentMap;
 
@@ -56,11 +61,13 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   private final HazelcastInstance instance;
   private final boolean traceWithActiveSpanOnly;
+  private final TracingHelper helper;
 
   public TracingHazelcastInstance(HazelcastInstance instance,
       boolean traceWithActiveSpanOnly) {
     this.instance = instance;
     this.traceWithActiveSpanOnly = traceWithActiveSpanOnly;
+    helper = new TracingHelper(traceWithActiveSpanOnly);
   }
 
   @Override
@@ -127,13 +134,11 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public Cluster getCluster() {
-    //TODO?
     return instance.getCluster();
   }
 
   @Override
   public Endpoint getLocalEndpoint() {
-    // TODO?
     return instance.getLocalEndpoint();
   }
 
@@ -153,27 +158,30 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   @Override
   public <T> T executeTransaction(TransactionalTask<T> transactionalTask)
       throws TransactionException {
-    // TODO
-    return instance.executeTransaction(transactionalTask);
+    Span span = helper.buildSpan("executeTransaction");
+    span.setTag("transactionalTask", nullableClass(transactionalTask));
+    return decorate(() -> instance.executeTransaction(transactionalTask), span);
   }
 
   @Override
   public <T> T executeTransaction(TransactionOptions transactionOptions,
       TransactionalTask<T> transactionalTask) throws TransactionException {
-    // TODO
-    return instance.executeTransaction(transactionOptions, transactionalTask);
+    Span span = helper.buildSpan("executeTransaction");
+    span.setTag("transactionOptions", nullable(transactionOptions));
+    span.setTag("transactionalTask", nullableClass(transactionalTask));
+    return decorate(() -> instance.executeTransaction(transactionOptions, transactionalTask), span);
   }
 
   @Override
   public TransactionContext newTransactionContext() {
-    // TODO?
+    // TODO
     return instance.newTransactionContext();
   }
 
   @Override
   public TransactionContext newTransactionContext(
       TransactionOptions transactionOptions) {
-    // TODO?
+    // TODO
     return instance.newTransactionContext(transactionOptions);
   }
 

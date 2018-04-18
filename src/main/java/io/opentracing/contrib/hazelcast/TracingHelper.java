@@ -75,6 +75,15 @@ class TracingHelper {
     }
   }
 
+  Span buildSpan(String operationName) {
+    if (traceWithActiveSpanOnly && tracer.activeSpan() == null) {
+      return NoopSpan.INSTANCE;
+    } else {
+      return builder(operationName, null)
+          .start();
+    }
+  }
+
   static Span buildSpan(String operationName, SpanContext parent, boolean traceWithActiveSpanOnly) {
     if (parent instanceof NoopSpanContext) {
       return NoopSpan.INSTANCE;
