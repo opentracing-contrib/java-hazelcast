@@ -190,8 +190,7 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public <E> IAtomicReference<E> getAtomicReference(String s) {
-    // TODO
-    return instance.getAtomicReference(s);
+    return new TracingAtomicReference<>(instance.getAtomicReference(s), traceWithActiveSpanOnly);
   }
 
   @Override
