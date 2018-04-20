@@ -151,7 +151,6 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   @Override
   public DurableExecutorService getDurableExecutorService(
       String s) {
-    // TODO: after beta
     return instance.getDurableExecutorService(s);
   }
 
@@ -174,20 +173,17 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public TransactionContext newTransactionContext() {
-    // TODO
     return instance.newTransactionContext();
   }
 
   @Override
   public TransactionContext newTransactionContext(
       TransactionOptions transactionOptions) {
-    // TODO
     return instance.newTransactionContext(transactionOptions);
   }
 
   @Override
   public IdGenerator getIdGenerator(String s) {
-    // TODO?
     return instance.getIdGenerator(s);
   }
 
@@ -213,20 +209,17 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public Collection<DistributedObject> getDistributedObjects() {
-    // TODO?
     return instance.getDistributedObjects();
   }
 
   @Override
   public String addDistributedObjectListener(
       DistributedObjectListener distributedObjectListener) {
-    // TODO?
     return instance.addDistributedObjectListener(distributedObjectListener);
   }
 
   @Override
   public boolean removeDistributedObjectListener(String s) {
-    // TODO?
     return instance.removeDistributedObjectListener(s);
   }
 
@@ -237,38 +230,34 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public PartitionService getPartitionService() {
-    //TODO?
     return instance.getPartitionService();
   }
 
   @Override
   public QuorumService getQuorumService() {
-    //TODO?
     return instance.getQuorumService();
   }
 
   @Override
   public ClientService getClientService() {
-    //TODO?
+
     return instance.getClientService();
   }
 
   @Override
   public LoggingService getLoggingService() {
-    //TODO?
+
     return instance.getLoggingService();
   }
 
   @Override
   public LifecycleService getLifecycleService() {
-    //TODO?
     return instance.getLifecycleService();
   }
 
   @Override
   public <T extends DistributedObject> T getDistributedObject(String serviceName,
       String name) {
-    //TODO?
     return instance.getDistributedObject(serviceName, name);
   }
 
