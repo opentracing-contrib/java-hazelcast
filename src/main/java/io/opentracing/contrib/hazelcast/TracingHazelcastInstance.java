@@ -203,14 +203,12 @@ public class TracingHazelcastInstance implements HazelcastInstance {
 
   @Override
   public ICountDownLatch getCountDownLatch(String s) {
-    //TODO
-    return instance.getCountDownLatch(s);
+    return new TracingCountDownLatch(instance.getCountDownLatch(s), traceWithActiveSpanOnly);
   }
 
   @Override
   public ISemaphore getSemaphore(String s) {
-    // TODO
-    return instance.getSemaphore(s);
+    return new TracingSemaphore(instance.getSemaphore(s), traceWithActiveSpanOnly);
   }
 
   @Override
@@ -268,39 +266,34 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   }
 
   @Override
-  public <T extends DistributedObject> T getDistributedObject(String s,
-      String s1) {
+  public <T extends DistributedObject> T getDistributedObject(String serviceName,
+      String name) {
     //TODO?
-    return instance.getDistributedObject(s, s1);
+    return instance.getDistributedObject(serviceName, name);
   }
 
   @Override
   public ConcurrentMap<String, Object> getUserContext() {
-    //TODO?
     return instance.getUserContext();
   }
 
   @Override
   public HazelcastXAResource getXAResource() {
-    //TODO?
     return instance.getXAResource();
   }
 
   @Override
   public ICacheManager getCacheManager() {
-    //TODO?
     return instance.getCacheManager();
   }
 
   @Override
   public CardinalityEstimator getCardinalityEstimator(String s) {
-    //TODO?
     return instance.getCardinalityEstimator(s);
   }
 
   @Override
   public IScheduledExecutorService getScheduledExecutorService(String s) {
-    // TODO
     return instance.getScheduledExecutorService(s);
   }
 
