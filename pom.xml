@@ -20,7 +20,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.opentracing.contrib</groupId>
   <artifactId>opentracing-hazelcast</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
 
   <name>OpenTracing Instrumentation for Hazelcast</name>
   <description>OpenTracing Instrumentation for Hazelcast</description>

@@ -3,6 +3,9 @@
 # OpenTracing Hazelcast Instrumentation
 OpenTracing instrumentation for Hazelcast.
 
+## Requirements
+- Java 8+
+
 ## Installation
 
 pom.xml
