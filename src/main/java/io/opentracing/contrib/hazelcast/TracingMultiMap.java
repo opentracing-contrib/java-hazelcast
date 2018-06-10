@@ -77,6 +77,13 @@ public class TracingMultiMap<K, V> implements MultiMap<K, V> {
   }
 
   @Override
+  public void delete(Object key) {
+    Span span = helper.buildSpan("delete", map);
+    span.setTag("key", nullable(key));
+    decorateAction(() -> map.delete(key), span);
+  }
+
+  @Override
   public Set<K> localKeySet() {
     Span span = helper.buildSpan("localKeySet", map);
     return decorate(map::localKeySet, span);

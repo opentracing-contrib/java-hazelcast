@@ -78,6 +78,13 @@ public class TracingSemaphore implements ISemaphore {
   }
 
   @Override
+  public void increasePermits(int increase) {
+    Span span = helper.buildSpan("increasePermits", semaphore);
+    span.setTag("increase", increase);
+    decorateAction(() -> semaphore.increasePermits(increase), span);
+  }
+
+  @Override
   public void release() {
     Span span = helper.buildSpan("release", semaphore);
     decorateAction(semaphore::release, span);
