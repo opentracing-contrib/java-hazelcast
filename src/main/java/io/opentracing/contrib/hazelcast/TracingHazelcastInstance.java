@@ -42,7 +42,9 @@ import com.hazelcast.core.LifecycleService;
 import com.hazelcast.core.MultiMap;
 import com.hazelcast.core.PartitionService;
 import com.hazelcast.core.ReplicatedMap;
+import com.hazelcast.crdt.pncounter.PNCounter;
 import com.hazelcast.durableexecutor.DurableExecutorService;
+import com.hazelcast.flakeidgen.FlakeIdGenerator;
 import com.hazelcast.logging.LoggingService;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.quorum.QuorumService;
@@ -188,6 +190,11 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   }
 
   @Override
+  public FlakeIdGenerator getFlakeIdGenerator(String name) {
+    return instance.getFlakeIdGenerator(name);
+  }
+
+  @Override
   public IAtomicLong getAtomicLong(String s) {
     return new TracingAtomicLong(instance.getAtomicLong(s), traceWithActiveSpanOnly);
   }
@@ -279,6 +286,11 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   @Override
   public CardinalityEstimator getCardinalityEstimator(String s) {
     return instance.getCardinalityEstimator(s);
+  }
+
+  @Override
+  public PNCounter getPNCounter(String name) {
+    return instance.getPNCounter(name);
   }
 
   @Override
