@@ -37,6 +37,10 @@ map.put("key", "value");
 
 ```
 
+## License
+
+[Apache 2.0 License](./LICENSE).
+
 [ci-img]: https://travis-ci.org/opentracing-contrib/java-hazelcast.svg?branch=master
 [ci]: https://travis-ci.org/opentracing-contrib/java-hazelcast
 [cov-img]: https://coveralls.io/repos/github/opentracing-contrib/java-hazelcast/badge.svg?branch=master
