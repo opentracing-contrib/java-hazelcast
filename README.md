@@ -27,7 +27,7 @@ Tracer tracer = ...
 GlobalTracer.register(tracer);
 
 // Decorate HazelcastInstance with Tracing HazelcastInstance:
-HazelcastInstance hazelcast = new TracingHazelcastInstanve(Hazelcast.newHazelcastInstance(config), 
+HazelcastInstance hazelcast = new TracingHazelcastInstance(Hazelcast.newHazelcastInstance(config), 
                                                            false);
 
 // Get Map: 
