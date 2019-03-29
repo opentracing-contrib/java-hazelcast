@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The OpenTracing Authors
+ * Copyright 2018-2019 The OpenTracing Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -191,6 +191,20 @@ public class TracingMap<K, V> implements IMap<K, V> {
   }
 
   @Override
+  public ICompletableFuture<V> putAsync(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle,
+      TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("putAsync", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    return decorate(() -> new TracingCompletableFuture<>(map.putAsync(key, value, ttl, ttlUnit,
+        maxIdle, maxIdleUnit), traceWithActiveSpanOnly, inject(span)), span);
+  }
+
+  @Override
   public ICompletableFuture<Void> setAsync(K key, V value) {
     Span span = helper.buildSpan("setAsync", map);
     span.setTag("key", nullable(key));
@@ -209,6 +223,20 @@ public class TracingMap<K, V> implements IMap<K, V> {
     span.setTag("timeUnit", nullable(timeUnit));
     return decorate(() -> new TracingCompletableFuture<>(map.setAsync(key, value, ttl, timeUnit),
         traceWithActiveSpanOnly, inject(span)), span);
+  }
+
+  @Override
+  public ICompletableFuture<Void> setAsync(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle,
+      TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("setAsync", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    return decorate(() -> new TracingCompletableFuture<>(map.setAsync(key, value, ttl, ttlUnit,
+        maxIdle, maxIdleUnit), traceWithActiveSpanOnly, inject(span)), span);
   }
 
   @Override
@@ -249,6 +277,18 @@ public class TracingMap<K, V> implements IMap<K, V> {
   }
 
   @Override
+  public V put(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle, TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("put", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    return decorate(() -> map.put(key, value, ttl, ttlUnit, maxIdle, maxIdleUnit), span);
+  }
+
+  @Override
   public void putTransient(K key, V value, long ttl, TimeUnit timeUnit) {
     Span span = helper.buildSpan("putTransient", map);
     span.setTag("key", nullable(key));
@@ -256,6 +296,19 @@ public class TracingMap<K, V> implements IMap<K, V> {
     span.setTag("ttl", ttl);
     span.setTag("timeUnit", nullable(timeUnit));
     decorateAction(() -> map.putTransient(key, value, ttl, timeUnit), span);
+  }
+
+  @Override
+  public void putTransient(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle,
+      TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("putTransient", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    decorateAction(() -> map.putTransient(key, value, ttl, ttlUnit, maxIdle, maxIdleUnit), span);
   }
 
   @Override
@@ -274,6 +327,19 @@ public class TracingMap<K, V> implements IMap<K, V> {
     span.setTag("ttl", ttl);
     span.setTag("timeUnit", nullable(timeUnit));
     return decorate(() -> map.putIfAbsent(key, value, ttl, timeUnit), span);
+  }
+
+  @Override
+  public V putIfAbsent(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle,
+      TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("putIfAbsent", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    return decorate(() -> map.putIfAbsent(key, value, ttl, ttlUnit, maxIdle, maxIdleUnit), span);
   }
 
   @Override
@@ -309,6 +375,18 @@ public class TracingMap<K, V> implements IMap<K, V> {
     span.setTag("ttl", ttl);
     span.setTag("timeUnit", nullable(timeUnit));
     decorateAction(() -> map.set(key, value, ttl, timeUnit), span);
+  }
+
+  @Override
+  public void set(K key, V value, long ttl, TimeUnit ttlUnit, long maxIdle, TimeUnit maxIdleUnit) {
+    Span span = helper.buildSpan("set", map);
+    span.setTag("key", nullable(key));
+    span.setTag("value", nullable(value));
+    span.setTag("ttl", ttl);
+    span.setTag("ttlUnit", nullable(ttlUnit));
+    span.setTag("maxIdle", maxIdle);
+    span.setTag("maxIdleUnit", nullable(maxIdleUnit));
+    decorateAction(() -> map.set(key, value, ttl, ttlUnit, maxIdle, maxIdleUnit), span);
   }
 
   @Override
@@ -796,6 +874,15 @@ public class TracingMap<K, V> implements IMap<K, V> {
     span.setTag("includeValue", includeValue);
     return decorate(() -> map.getQueryCache(queryCacheName, listener, predicate, includeValue),
         span);
+  }
+
+  @Override
+  public boolean setTtl(K key, long ttl, TimeUnit timeunit) {
+    Span span = helper.buildSpan("setTtl", map);
+    span.setTag("key", nullable(key));
+    span.setTag("ttl", ttl);
+    span.setTag("timeunit", nullable(timeunit));
+    return decorate(() -> map.setTtl(key, ttl, timeunit), span);
   }
 
   @Override

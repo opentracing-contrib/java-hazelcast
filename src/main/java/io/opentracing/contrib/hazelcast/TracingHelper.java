@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 The OpenTracing Authors
+ * Copyright 2018-2019 The OpenTracing Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,8 +22,7 @@ import io.opentracing.Tracer.SpanBuilder;
 import io.opentracing.noop.NoopSpan;
 import io.opentracing.noop.NoopSpanContext;
 import io.opentracing.propagation.Format.Builtin;
-import io.opentracing.propagation.TextMapExtractAdapter;
-import io.opentracing.propagation.TextMapInjectAdapter;
+import io.opentracing.propagation.TextMapAdapter;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 import java.util.Collection;
@@ -135,7 +134,7 @@ class TracingHelper {
       return spanContextMap;
     }
     GlobalTracer.get()
-        .inject(span.context(), Builtin.TEXT_MAP, new TextMapInjectAdapter(spanContextMap));
+        .inject(span.context(), Builtin.TEXT_MAP, new TextMapAdapter(spanContextMap));
     return spanContextMap;
   }
 
@@ -143,11 +142,11 @@ class TracingHelper {
     if (spanContextMap == null) {
       return null;
     }
-    return GlobalTracer.get().extract(Builtin.TEXT_MAP, new TextMapExtractAdapter(spanContextMap));
+    return GlobalTracer.get().extract(Builtin.TEXT_MAP, new TextMapAdapter(spanContextMap));
   }
 
   static <T> T decorate(Supplier<T> supplier, Span span) {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       return supplier.get();
     } catch (Exception e) {
       onError(e, span);
@@ -159,7 +158,7 @@ class TracingHelper {
 
   static <T> T decorateExceptionally(ThrowingSupplier<T> supplier, Span span)
       throws InterruptedException {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       return supplier.get();
     } catch (Exception e) {
       onError(e, span);
@@ -171,7 +170,7 @@ class TracingHelper {
 
   static <T> T decorateExceptionally2(ThrowingSupplier2<T> supplier, Span span)
       throws Exception {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       return supplier.get();
     } catch (Exception e) {
       onError(e, span);
@@ -183,7 +182,7 @@ class TracingHelper {
 
   static <T> T decorateExceptionally3(ThrowingSupplier3<T> supplier, Span span)
       throws InterruptedException, ExecutionException {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       return supplier.get();
     } catch (Exception e) {
       onError(e, span);
@@ -195,7 +194,7 @@ class TracingHelper {
 
   static <T> T decorateExceptionally4(ThrowingSupplier4<T> supplier, Span span)
       throws InterruptedException, ExecutionException, TimeoutException {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       return supplier.get();
     } catch (Exception e) {
       onError(e, span);
@@ -207,7 +206,7 @@ class TracingHelper {
 
   static void decorateActionExceptionally(ThrowingAction action, Span span)
       throws InterruptedException {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       action.execute();
     } catch (Exception e) {
       onError(e, span);
@@ -218,7 +217,7 @@ class TracingHelper {
   }
 
   static void decorateAction(Action action, Span span) {
-    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span, false)) {
+    try (Scope ignore = GlobalTracer.get().scopeManager().activate(span)) {
       action.execute();
     } catch (Exception e) {
       onError(e, span);
