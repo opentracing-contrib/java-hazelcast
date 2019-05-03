@@ -19,38 +19,40 @@ import com.hazelcast.instance.Node;
 import com.hazelcast.spi.NodeAware;
 import com.hazelcast.spi.serialization.SerializationService;
 import com.hazelcast.spi.serialization.SerializationServiceAware;
-
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
 public class AwareCallable<V> implements Callable<V>, Serializable,
-        HazelcastInstanceAware, NodeAware, SerializationServiceAware {
+    HazelcastInstanceAware, NodeAware, SerializationServiceAware {
 
-    private HazelcastInstance hazelcastInstance;
-    private Node node;
-    private SerializationService serializationService;
+  private HazelcastInstance hazelcastInstance;
+  private Node node;
+  private SerializationService serializationService;
 
-    @Override
-    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
-        this.hazelcastInstance = hazelcastInstance;
-    }
+  @Override
+  public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+    this.hazelcastInstance = hazelcastInstance;
+  }
 
-    @Override public void setNode(Node node) {
+  @Override
+  public void setNode(Node node) {
 
-        this.node = node;
-    }
+    this.node = node;
+  }
 
-    @Override public void setSerializationService(
-            SerializationService serializationService) {
+  @Override
+  public void setSerializationService(
+      SerializationService serializationService) {
 
-        this.serializationService = serializationService;
-    }
+    this.serializationService = serializationService;
+  }
 
-    @Override public V call() {
-        Objects.requireNonNull(hazelcastInstance);
-        Objects.requireNonNull(node);
-        Objects.requireNonNull(serializationService);
-        return null;
-    }
+  @Override
+  public V call() {
+    Objects.requireNonNull(hazelcastInstance);
+    Objects.requireNonNull(node);
+    Objects.requireNonNull(serializationService);
+    return null;
+  }
 }

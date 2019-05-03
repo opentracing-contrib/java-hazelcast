@@ -25,13 +25,12 @@ import com.hazelcast.spi.serialization.SerializationService;
 import com.hazelcast.spi.serialization.SerializationServiceAware;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
-
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class TracingCallable<V> implements Callable<V>, Serializable, HazelcastInstanceAware,
-        NodeAware, SerializationServiceAware {
+    NodeAware, SerializationServiceAware {
 
   private final Callable<V> callable;
   private final boolean traceWithActiveSpanOnly;
@@ -59,14 +58,16 @@ public class TracingCallable<V> implements Callable<V>, Serializable, HazelcastI
     }
   }
 
-  @Override public void setNode(Node node) {
+  @Override
+  public void setNode(Node node) {
     if (callable instanceof NodeAware) {
       ((NodeAware) callable).setNode(node);
     }
   }
 
-  @Override public void setSerializationService(
-          SerializationService serializationService) {
+  @Override
+  public void setSerializationService(
+      SerializationService serializationService) {
     if (callable instanceof SerializationServiceAware) {
       ((SerializationServiceAware) callable).setSerializationService(serializationService);
     }

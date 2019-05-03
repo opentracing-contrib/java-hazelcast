@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class TracingRunnable implements Runnable, Serializable,
-        HazelcastInstanceAware, NodeAware, SerializationServiceAware {
+    HazelcastInstanceAware, NodeAware, SerializationServiceAware {
 
   private final Runnable runnable;
   private final boolean traceWithActiveSpanOnly;
@@ -58,14 +58,16 @@ public class TracingRunnable implements Runnable, Serializable,
     }
   }
 
-  @Override public void setNode(Node node) {
+  @Override
+  public void setNode(Node node) {
     if (runnable instanceof NodeAware) {
       ((NodeAware) runnable).setNode(node);
     }
   }
 
-  @Override public void setSerializationService(
-          SerializationService serializationService) {
+  @Override
+  public void setSerializationService(
+      SerializationService serializationService) {
     if (runnable instanceof SerializationServiceAware) {
       ((SerializationServiceAware) runnable).setSerializationService(serializationService);
     }
