@@ -296,6 +296,32 @@ public class TracingTest {
     assertNull(tracer.activeSpan());
   }
 
+  @Test
+  public void testAwareRunnable() {
+    IExecutorService ex = hazelcast.getExecutorService("executor");
+    ex.submit(new AwareRunnable());
+
+    await().atMost(15, TimeUnit.SECONDS).until(reportedSpansSize(), equalTo(2));
+
+    List<MockSpan> spans = tracer.finishedSpans();
+    assertEquals(2, spans.size());
+    checkSpans(spans);
+    assertNull(tracer.activeSpan());
+  }
+
+  @Test
+  public void testAwareCallable() {
+    IExecutorService ex = hazelcast.getExecutorService("executor");
+    ex.submit(new AwareCallable<>());
+
+    await().atMost(15, TimeUnit.SECONDS).until(reportedSpansSize(), equalTo(2));
+
+    List<MockSpan> spans = tracer.finishedSpans();
+    assertEquals(2, spans.size());
+    checkSpans(spans);
+    assertNull(tracer.activeSpan());
+  }
+
   private Callable<Integer> reportedSpansSize() {
     return () -> tracer.finishedSpans().size();
   }

@@ -17,12 +17,19 @@ import static io.opentracing.contrib.hazelcast.TracingHelper.decorateAction;
 import static io.opentracing.contrib.hazelcast.TracingHelper.extract;
 import static io.opentracing.contrib.hazelcast.TracingHelper.nullableClass;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.HazelcastInstanceAware;
+import com.hazelcast.instance.Node;
+import com.hazelcast.spi.NodeAware;
+import com.hazelcast.spi.serialization.SerializationService;
+import com.hazelcast.spi.serialization.SerializationServiceAware;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import java.io.Serializable;
 import java.util.Map;
 
-public class TracingRunnable implements Runnable, Serializable {
+public class TracingRunnable implements Runnable, Serializable,
+        HazelcastInstanceAware, NodeAware, SerializationServiceAware {
 
   private final Runnable runnable;
   private final boolean traceWithActiveSpanOnly;
@@ -44,5 +51,23 @@ public class TracingRunnable implements Runnable, Serializable {
     decorateAction(runnable::run, span);
   }
 
+  @Override
+  public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+    if (runnable instanceof HazelcastInstanceAware) {
+      ((HazelcastInstanceAware) runnable).setHazelcastInstance(hazelcastInstance);
+    }
+  }
 
+  @Override public void setNode(Node node) {
+    if (runnable instanceof NodeAware) {
+      ((NodeAware) runnable).setNode(node);
+    }
+  }
+
+  @Override public void setSerializationService(
+          SerializationService serializationService) {
+    if (runnable instanceof SerializationServiceAware) {
+      ((SerializationServiceAware) runnable).setSerializationService(serializationService);
+    }
+  }
 }
