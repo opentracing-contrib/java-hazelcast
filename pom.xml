@@ -60,7 +60,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-    <opentracing.version>0.32.0</opentracing.version>
+    <opentracing.version>0.33.0</opentracing.version>
+    <hazelcast.version>3.11.4</hazelcast.version>
     <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
   </properties>
@@ -81,7 +82,7 @@
     <dependency>
       <groupId>com.hazelcast</groupId>
       <artifactId>hazelcast</artifactId>
-      <version>3.11.2</version>
+      <version>${hazelcast.version}</version>
     </dependency>
 
     <dependency>
