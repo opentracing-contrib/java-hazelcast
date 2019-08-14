@@ -42,6 +42,7 @@ import com.hazelcast.core.LifecycleService;
 import com.hazelcast.core.MultiMap;
 import com.hazelcast.core.PartitionService;
 import com.hazelcast.core.ReplicatedMap;
+import com.hazelcast.cp.CPSubsystem;
 import com.hazelcast.crdt.pncounter.PNCounter;
 import com.hazelcast.durableexecutor.DurableExecutorService;
 import com.hazelcast.flakeidgen.FlakeIdGenerator;
@@ -296,6 +297,11 @@ public class TracingHazelcastInstance implements HazelcastInstance {
   @Override
   public IScheduledExecutorService getScheduledExecutorService(String s) {
     return instance.getScheduledExecutorService(s);
+  }
+
+  @Override
+  public CPSubsystem getCPSubsystem() {
+    return new TracingCPSubsystem(instance.getCPSubsystem(), traceWithActiveSpanOnly);
   }
 
   @Override
