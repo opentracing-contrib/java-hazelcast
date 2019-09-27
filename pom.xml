@@ -18,7 +18,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.opentracing.contrib</groupId>
   <artifactId>opentracing-hazelcast</artifactId>
-  <version>0.1.4-SNAPSHOT</version>
+  <version>0.1.4</version>
 
   <name>OpenTracing Instrumentation for Hazelcast</name>
   <description>OpenTracing Instrumentation for Hazelcast</description>
@@ -31,7 +31,7 @@
     </connection>
     <developerConnection>scm:git:https://github.com/opentracing-contrib/java-hazelcast.git
     </developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.1.4</tag>
   </scm>
 
   <licenses>
